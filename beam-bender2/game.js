@@ -21,7 +21,7 @@ const levels = [
   {
     source: { x: 0, y: 6, dir: "right" },
     target: { x: 6, y: 0 },
-    obstacles: [{ x: 3, y: 6 }, { x: 4, y: 4 }, { x: 5, y: 2 }],
+    obstacles: [{ x:1 , y: 0 }, { x: 2, y: 0 }, { x: 3, y: 6 }, { x: 4, y: 4 }, { x: 5, y: 2 }],
     mirrors: [
       { x: 1, y: 6, angle: 45 },
       { x: 4, y: 6, angle: 135 },
@@ -31,7 +31,7 @@ const levels = [
   {
     source: { x: 0, y: 7, dir: "right" },
     target: { x: 7, y: 0 },
-    obstacles: [{ x: 2, y: 7 }, { x: 3, y: 5 }, { x: 5, y: 3 }, { x: 6, y: 1 }],
+    obstacles: [{ x:1 , y: 0 }, { x: 2, y: 0 }, { x: 2, y: 7 }, { x: 3, y: 5 }, { x: 5, y: 3 }, { x: 6, y: 1 }],
     mirrors: [
       { x: 1, y: 6, angle: 45 },
       { x: 4, y: 7, angle: 135 },
