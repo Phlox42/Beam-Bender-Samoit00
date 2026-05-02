@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Share+Tech+Mono&display=swap');
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: 'Share Tech Mono', monospace;
+  background: #0a0b12;
+  color: #e8e8ef;
+  /* Kein Scrollen, alles auf den Bildschirm passen */
+  overflow: hidden;
+}
+
+/* ── Layout: alles in den Viewport zwingen ───────────────── */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;         /* dynamic viewport height – berücksichtigt Browser-Chrome */
+  padding: 6px 8px;
+  gap: 6px;
+}
+
+/* ── HUD ─────────────────────────────────────────────────── */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.hud h1 {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(0.85rem, 3vw, 1.2rem);
+  color: #00d4ff;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+.stats {
+  display: flex;
+  gap: 10px;
+  font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+  color: #ffe066;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hud-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+/* ── Canvas ──────────────────────────────────────────────── */
+canvas {
+  /* Canvas füllt den gesamten verbleibenden Platz */
+  flex: 1 1 0;
+  min-height: 0;          /* wichtig für flex shrink */
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 100%;
+  /* Höhe wird durch flex gesteuert – aspect-ratio sorgt für Quadrat */
+  align-self: center;
+  background: #0c0d14;
+  border: 1.5px solid #1e2138;
+  border-radius: 8px;
+  touch-action: none;
+  display: block;
+}
+
+/* ── Status-Zeile ────────────────────────────────────────── */
+#statusText {
+  margin: 0;
+  font-size: clamp(0.72rem, 2vw, 0.85rem);
+  color: #aabbd4;
+  flex-shrink: 0;
+  text-align: center;
+  min-height: 1.2em;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+button {
+  border: 1px solid #2e3254;
+  background: #14172a;
+  color: #e0e4ff;
+  padding: 7px 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(0.75rem, 2.5vw, 0.88rem);
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+button:hover  { background: #1e2340; border-color: #00d4ff66; }
+button:active { background: #0e1020; }
+
+#testLaserBtn { border-color: #ff4432aa; color: #ff7060; }
+#testLaserBtn:hover { background: #1f100e; border-color: #ff4432; }
+
+#infoBtn  { min-width: 34px; padding: 7px 8px; }
+#resetBtn { min-width: 34px; padding: 7px 8px; }
+
+/* ── Overlays ────────────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 7, 14, 0.88);
+  display: grid;
+  place-items: center;
+  z-index: 20;
+  backdrop-filter: blur(4px);
+  padding: 16px;
+}
+
+.overlay-card {
+  background: #10121e;
+  border: 1px solid #2e3050;
+  border-radius: 14px;
+  padding: 24px 28px;
+  width: min(92vw, 360px);
+  text-align: center;
+  display: grid;
+  gap: 14px;
+  box-shadow: 0 0 40px rgba(0, 200, 255, 0.08);
+}
+
+.overlay-card h1 {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.4rem, 6vw, 2rem);
+  color: #00d4ff;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.overlay-card h2 {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1rem, 4vw, 1.4rem);
+  color: #ffe066;
+}
+
+.overlay-card p { margin: 0; opacity: 0.8; font-size: 0.9rem; }
+
+.overlay-subtitle {
+  color: #8899cc;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.instructions {
+  list-style: none;
+  padding: 12px 14px;
+  margin: 0;
+  text-align: left;
+  background: #0d0f1c;
+  border-radius: 8px;
+  border: 1px solid #1e2038;
+  display: grid;
+  gap: 8px;
+  font-size: clamp(0.78rem, 2.5vw, 0.88rem);
+  line-height: 1.5;
+}
+
+.instructions li strong { color: #00d4ff; }
+
+.hidden { display: none !important; }

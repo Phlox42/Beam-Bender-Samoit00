@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Share+Tech+Mono&display=swap');
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* kein Scrollen auf Mobile */
+}
+
+body {
+  font-family: 'Share Tech Mono', monospace;
+  background: #0a0b12;
+  color: #e8e8ef;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* ── Overlay ─────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 7, 14, 0.9);
+  display: grid;
+  place-items: center;
+  z-index: 20;
+  backdrop-filter: blur(4px);
+  padding: 16px;
+}
+
+.overlay-card {
+  background: #10121e;
+  border: 1px solid #2e3050;
+  border-radius: 14px;
+  padding: 24px 28px;
+  width: min(92vw, 360px);
+  text-align: center;
+  display: grid;
+  gap: 12px;
+  box-shadow: 0 0 40px rgba(0, 200, 255, 0.08);
+}
+
+.overlay-card h1 {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  color: #00d4ff;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  letter-spacing: 0.08em;
+}
+
+.overlay-card h2 {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1rem, 4vw, 1.4rem);
+  color: #ffe066;
+}
+
+.overlay-card p { margin: 0; opacity: 0.8; font-size: 0.9rem; }
+.overlay-subtitle { color: #8899cc; font-size: 0.85rem !important; letter-spacing: 0.12em; text-transform: uppercase; }
+.info-note { font-size: 0.78rem !important; opacity: 0.5 !important; }
+
+.instructions {
+  list-style: none;
+  padding: 12px 14px;
+  margin: 0;
+  text-align: left;
+  background: #0d0f1c;
+  border-radius: 8px;
+  border: 1px solid #1e2038;
+  display: grid;
+  gap: 7px;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+.instructions strong { color: #00d4ff; }
+
+.hidden { display: none !important; }
+
+/* ── App layout ──────────────────────────── */
+.app {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 6px 8px 4px;
+  gap: 6px;
+  height: 100vh;
+}
+
+/* ── HUD ─────────────────────────────────── */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.hud h1 {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(0.75rem, 3.5vw, 1.1rem);
+  color: #00d4ff;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.hud-right span {
+  font-size: clamp(0.7rem, 2.8vw, 0.88rem);
+  color: #ffe066;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Canvas ──────────────────────────────── */
+canvas {
+  /* Fill as much space as possible, stay square */
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: calc(100vh - 80px); /* leave room for HUD + status */
+  object-fit: contain;
+  background: #0c0d14;
+  border: 1.5px solid #1e2138;
+  border-radius: 10px;
+  touch-action: none;
+  flex-shrink: 1;
+  min-height: 0;
+}
+
+/* ── Status ──────────────────────────────── */
+#statusText {
+  margin: 0;
+  font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+  color: #aabbd4;
+  text-align: center;
+  min-height: 1.1em;
+  flex-shrink: 0;
+}
+
+/* ── Buttons ─────────────────────────────── */
+button {
+  border: 1px solid #2e3254;
+  background: #14172a;
+  color: #e0e4ff;
+  padding: 7px 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(0.75rem, 3vw, 0.9rem);
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+button:hover  { background: #1e2340; border-color: #00d4ff66; }
+button:active { background: #0e1020; }
+
+.btn-laser {
+  border-color: #ff4432aa;
+  color: #ff7060;
+}
+.btn-laser:hover {
+  background: #1f100e;
+  border-color: #ff4432;
+  box-shadow: 0 0 10px rgba(255, 68, 50, 0.2);
+}
