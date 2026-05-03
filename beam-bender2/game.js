@@ -175,8 +175,11 @@ function dirToVec(dir) {
 }
 
 function reflectVec(vx, vy, mirrorAngle) {
-  const norm = ((Math.round(mirrorAngle / 45) % 4) + 4) % 4;
-  const isSlash = (norm === 0 || norm === 2);
+  // Nur zwei physikalische Spiegelrichtungen:
+  // 0°/180° = "/" und 90° = "\".
+  // Dadurch wird 90° korrekt als nach unten reflektierend behandelt.
+  const norm = ((Math.round(mirrorAngle / 90) % 2) + 2) % 2;
+  const isSlash = norm === 0;
   return isSlash ? { x: -vy, y: -vx } : { x: vy, y: vx };
 }
 
