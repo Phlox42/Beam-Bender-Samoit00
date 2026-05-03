@@ -3,9 +3,8 @@
    MCI2-Lab · Touch-Events auf HTML Canvas
    ========================================================= */
 
-const GRID_SIZE = 8;
-const TILE_SIZE = 80;
-const CANVAS_SIZE = GRID_SIZE * TILE_SIZE;
+const GRID_COLS = 8;
+const GRID_ROWS = 12;
 
 // ── Level-Definitionen ──────────────────────────────────────
 const levels = [
@@ -57,8 +56,19 @@ const playAgainBtn = document.getElementById("playAgainBtn");
 const infoModal    = document.getElementById("infoModal");
 const closeInfoBtn = document.getElementById("closeInfoBtn");
 
-canvas.width  = CANVAS_SIZE;
-canvas.height = CANVAS_SIZE;
+let tileSize = 1;
+
+function updateCanvasMetrics() {
+  const rect = canvas.getBoundingClientRect();
+  const tileByWidth = rect.width / GRID_COLS;
+  tileSize = Math.max(1, Math.floor(tileByWidth));
+  canvas.width = tileSize * GRID_COLS;
+  canvas.height = tileSize * GRID_ROWS;
+}
+
+function tileUnit() {
+  return tileSize;
+}
 
 // ── Spielzustand ────────────────────────────────────────────
 let currentLevelIndex = 0;
@@ -115,7 +125,7 @@ function setStatus(text) {
 
 // ── Grid-Logik ──────────────────────────────────────────────
 function isInsideGrid(x, y) {
-  return x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE;
+  return x >= 0 && x < GRID_COLS && y >= 0 && y < GRID_ROWS;
 }
 
 function buildStaticMap() {
@@ -149,8 +159,8 @@ function canvasPoint(clientX, clientY) {
 
 function pointToGrid(px, py) {
   return {
-    x: Math.floor(px / TILE_SIZE),
-    y: Math.floor(py / TILE_SIZE),
+    x: Math.floor(px / tileSize),
+    y: Math.floor(py / tileSize),
   };
 }
 
@@ -420,7 +430,8 @@ function onTouchEnd(e) {
 
 // ── Render ───────────────────────────────────────────────────
 function draw() {
-  ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (!currentLevel) return;
   drawGrid();
   drawObstacles();
   drawSource();
@@ -432,77 +443,88 @@ function draw() {
 function drawGrid() {
   ctx.strokeStyle = "#1a1c2e";
   ctx.lineWidth   = 1;
-  for (let i = 0; i <= GRID_SIZE; i++) {
-    const p = i * TILE_SIZE;
-    ctx.beginPath(); ctx.moveTo(p, 0);         ctx.lineTo(p, CANVAS_SIZE); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0, p);         ctx.lineTo(CANVAS_SIZE, p); ctx.stroke();
+  for (let i = 0; i <= GRID_COLS; i++) {
+    const px = i * tileSize;
+    ctx.beginPath(); ctx.moveTo(px, 0);            ctx.lineTo(px, canvas.height); ctx.stroke();
+  }
+  for (let i = 0; i <= GRID_ROWS; i++) {
+    const py = i * tileSize;
+    ctx.beginPath(); ctx.moveTo(0, py);            ctx.lineTo(canvas.width, py);  ctx.stroke();
   }
 }
 
 function cellCenter(x, y) {
-  return { cx: (x + 0.5) * TILE_SIZE, cy: (y + 0.5) * TILE_SIZE };
+  return { cx: (x + 0.5) * tileSize, cy: (y + 0.5) * tileSize };
 }
 
 function drawSource() {
+  const u = tileUnit();
   const { x, y } = currentLevel.source;
   const { cx, cy } = cellCenter(x, y);
   ctx.fillStyle = "#0d1a30";
-  ctx.fillRect(x * TILE_SIZE + 3, y * TILE_SIZE + 3, TILE_SIZE - 6, TILE_SIZE - 6);
-  const grad = ctx.createRadialGradient(cx, cy, 2, cx, cy, 22);
+  ctx.fillRect(x * tileSize + 3, y * tileSize + 3, tileSize - 6, tileSize - 6);
+  const grad = ctx.createRadialGradient(cx, cy, 2, cx, cy, u * 0.28);
   grad.addColorStop(0, "#ffffff");
   grad.addColorStop(0.3, "#7dd8ff");
   grad.addColorStop(1, "#00d4ff00");
   ctx.fillStyle = grad;
-  ctx.beginPath(); ctx.arc(cx, cy, 22, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx, cy, u * 0.28, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = "#00d4ff";
-  ctx.font = "bold 16px monospace";
+  ctx.font = `bold ${Math.max(12, Math.floor(u * 0.2))}px monospace`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText({ right:"▶", left:"◀", up:"▲", down:"▼" }[currentLevel.source.dir] || "▶", cx, cy);
 }
 
 function drawTarget() {
+  const u = tileUnit();
   const { x, y } = currentLevel.target;
   const { cx, cy } = cellCenter(x, y);
   ctx.fillStyle = "#1a0d2e";
-  ctx.fillRect(x * TILE_SIZE + 3, y * TILE_SIZE + 3, TILE_SIZE - 6, TILE_SIZE - 6);
-  [22, 14, 6].forEach((r, i) => {
+  ctx.fillRect(x * tileSize + 3, y * tileSize + 3, tileSize - 6, tileSize - 6);
+  [u * 0.28, u * 0.18, u * 0.08].forEach((r, i) => {
     ctx.strokeStyle = ["#5500aa","#9933ff","#cc66ff"][i];
     ctx.lineWidth = 2.5;
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
   });
   ctx.fillStyle = "#cc66ff";
-  ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx, cy, Math.max(3, u * 0.05), 0, Math.PI * 2); ctx.fill();
 }
 
 function drawObstacles() {
+  const u = tileUnit();
   currentLevel.obstacles.forEach(({ x, y }) => {
     ctx.fillStyle = "#1e1418";
-    ctx.fillRect(x * TILE_SIZE + 3, y * TILE_SIZE + 3, TILE_SIZE - 6, TILE_SIZE - 6);
+    ctx.fillRect(x * tileSize + 3, y * tileSize + 3, tileSize - 6, tileSize - 6);
     ctx.strokeStyle = "#5a2030"; ctx.lineWidth = 1.5;
-    const x0 = x * TILE_SIZE + 3, y0 = y * TILE_SIZE + 3, sz = TILE_SIZE - 6;
-    for (let d = -sz; d <= sz; d += 14) {
+    const x0 = x * tileSize + 3;
+    const y0 = y * tileSize + 3;
+    const w = tileSize - 6;
+    const h = tileSize - 6;
+    const step = Math.max(8, u * 0.18);
+    for (let d = -h; d <= w; d += step) {
       ctx.beginPath();
-      ctx.moveTo(x0 + Math.max(0, d),    y0 + Math.max(0, -d));
-      ctx.lineTo(x0 + Math.min(sz, d+sz), y0 + Math.min(sz, sz-d));
+      ctx.moveTo(x0 + Math.max(0, d),      y0 + Math.max(0, -d));
+      ctx.lineTo(x0 + Math.min(w, d + h),  y0 + Math.min(h, h - d));
       ctx.stroke();
     }
     ctx.strokeStyle = "#8b3040"; ctx.lineWidth = 1.5;
-    ctx.strokeRect(x * TILE_SIZE + 3, y * TILE_SIZE + 3, TILE_SIZE - 6, TILE_SIZE - 6);
+    ctx.strokeRect(x * tileSize + 3, y * tileSize + 3, tileSize - 6, tileSize - 6);
   });
 }
 
 function drawMirrors() {
+  const u = tileUnit();
   mirrors.forEach((mirror) => {
     const { x, y, angle } = mirror;
     const { cx, cy } = cellCenter(x, y);
     const isActive = mirror.id === draggingMirrorId || mirror.id === rotationMirrorId;
 
     ctx.fillStyle = isActive ? "#1e2545" : "#141726";
-    ctx.fillRect(x * TILE_SIZE + 6, y * TILE_SIZE + 6, TILE_SIZE - 12, TILE_SIZE - 12);
+    ctx.fillRect(x * tileSize + 6, y * tileSize + 6, tileSize - 12, tileSize - 12);
     ctx.strokeStyle = isActive ? "#00d4ff" : "#2e3254";
     ctx.lineWidth   = isActive ? 2 : 1;
-    ctx.strokeRect(x * TILE_SIZE + 6, y * TILE_SIZE + 6, TILE_SIZE - 12, TILE_SIZE - 12);
+    ctx.strokeRect(x * tileSize + 6, y * tileSize + 6, tileSize - 12, tileSize - 12);
 
     ctx.save();
     ctx.translate(cx, cy);
@@ -512,32 +534,34 @@ function drawMirrors() {
     ctx.strokeStyle = isActive ? "#ffffff" : "#88eeff";
     ctx.lineWidth   = isActive ? 4 : 3;
     ctx.lineCap     = "round";
-    ctx.beginPath(); ctx.moveTo(-24, 24); ctx.lineTo(24, -24); ctx.stroke();
+    const r = u * 0.3;
+    ctx.beginPath(); ctx.moveTo(-r, r); ctx.lineTo(r, -r); ctx.stroke();
     ctx.shadowBlur  = 0;
     ctx.restore();
 
     ctx.fillStyle    = "#4a5070";
-    ctx.font         = "10px monospace";
+    ctx.font         = `${Math.max(9, Math.floor(u * 0.12))}px monospace`;
     ctx.textAlign    = "right";
     ctx.textBaseline = "bottom";
-    ctx.fillText(`${angle}°`, (x+1)*TILE_SIZE - 8, (y+1)*TILE_SIZE - 6);
+    ctx.fillText(`${angle}°`, (x + 1) * tileSize - 8, (y + 1) * tileSize - 6);
   });
 }
 
 function drawLaser() {
+  const u = tileUnit();
   if (laserPath.length === 0) return;
   const totalToDraw = Math.ceil(laserPath.length * laserAnimationProgress);
   ctx.save();
   ctx.strokeStyle = "#ff4432";
-  ctx.lineWidth   = 3;
+  ctx.lineWidth   = Math.max(2, u * 0.04);
   ctx.lineCap     = "round";
   ctx.shadowColor = "#ff7755";
-  ctx.shadowBlur  = 12;
+  ctx.shadowBlur  = Math.max(8, u * 0.16);
   for (let i = 0; i < totalToDraw; i++) {
     const seg = laserPath[i];
     ctx.beginPath();
-    ctx.moveTo((seg.from.x + 0.5) * TILE_SIZE, (seg.from.y + 0.5) * TILE_SIZE);
-    ctx.lineTo((seg.to.x   + 0.5) * TILE_SIZE, (seg.to.y   + 0.5) * TILE_SIZE);
+    ctx.moveTo((seg.from.x + 0.5) * tileSize, (seg.from.y + 0.5) * tileSize);
+    ctx.lineTo((seg.to.x   + 0.5) * tileSize, (seg.to.y   + 0.5) * tileSize);
     ctx.stroke();
   }
   ctx.restore();
@@ -569,3 +593,10 @@ playAgainBtn.addEventListener("click", () => {
   winModal.classList.add("hidden");
   loadLevel(0);
 });
+
+window.addEventListener("resize", () => {
+  updateCanvasMetrics();
+  draw();
+});
+
+updateCanvasMetrics();
