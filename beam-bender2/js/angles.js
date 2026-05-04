@@ -6,10 +6,8 @@
  * spriteAngleDeg = gespeicherter Rotationswinkel des Spiegel-Sprites (unverändert).
  */
 export function mirrorLineAngleFromSpriteRotation(spriteAngleDeg) {
-  const A = (spriteAngleDeg * Math.PI) / 180;
-  const dx = Math.cos(A) - Math.sin(A);
-  const dy = -Math.sin(A) - Math.cos(A);
-  let deg = (Math.atan2(dy, dx) * 180) / Math.PI;
-  deg = ((deg % 180) + 180) % 180;
+  // Sprite-Startposition ist "/" (45°-Linie).
+  // Offset von -45° damit 0° = horizontal (—), 90° = vertikal (|).
+  const deg = ((spriteAngleDeg - 45) % 180 + 180) % 180;
   return Math.round(deg);
 }
