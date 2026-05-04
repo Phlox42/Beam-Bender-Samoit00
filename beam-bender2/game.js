@@ -218,12 +218,28 @@ function dirToVec(dir) {
 }
 
 function reflectVec(vx, vy, mirrorAngle) {
-  // Nur zwei physikalische Spiegelrichtungen:
-  // 0°/180° = "/" und 90° = "\".
-  // Dadurch wird 90° korrekt als nach unten reflektierend behandelt.
-  const norm = ((Math.round(mirrorAngle / 90) % 2) + 2) % 2;
-  const isSlash = norm === 0;
-  return isSlash ? { x: -vy, y: -vx } : { x: vy, y: vx };
+  // Das Spiegel-Sprite startet als "/" (Richtungsvektor: 1, -1),
+  // deshalb braucht die physikalische Geradenrichtung einen -45°-Offset.
+  const rad = ((mirrorAngle - 45) * Math.PI) / 180;
+  const dx = Math.cos(rad);
+  const dy = Math.sin(rad);
+
+  const dot = vx * dx + vy * dy;
+  const cross = vx * dy - vy * dx;
+  const EPS = 1e-9;
+
+  // Strahl verläuft parallel zur Spiegelfläche -> unverändert weiter.
+  if (Math.abs(cross) < EPS) return { x: vx, y: vy };
+  // Strahl trifft senkrecht auf den Spiegel -> exakt zurück.
+  if (Math.abs(dot) < EPS) return { x: -vx, y: -vy };
+
+  // Spiegelung eines Vektors an einer Geraden mit Richtungsvektor (dx, dy):
+  // r = 2 * proj_d(v) - v
+  const rx = 2 * dot * dx - vx;
+  const ry = 2 * dot * dy - vy;
+
+  // Bewegungen bleiben auf das Raster (nur -1/0/1 pro Achse).
+  return { x: Math.round(rx), y: Math.round(ry) };
 }
 
 function traceLaserPath() {
