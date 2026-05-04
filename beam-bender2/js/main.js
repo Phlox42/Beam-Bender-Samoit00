@@ -21,6 +21,7 @@ import { canPlaceMirrorAt } from "./grid.js";
 import { traceLaserPath } from "./laser.js";
 import { draw } from "./render.js";
 import { registerCanvasInput } from "./input.js";
+import { hideMirrorRotationHud } from "./angleHud.js";
 
 function updateCanvasMetrics() {
   const rect = canvas.getBoundingClientRect();
@@ -47,6 +48,7 @@ function loadLevel(index) {
   state.laserPath = [];
   state.laserAnimating = false;
   state.laserAnimationProgress = 0;
+  hideMirrorRotationHud();
   setStatus("Spiegel anordnen, dann Laser testen.");
   updateHud();
   draw();

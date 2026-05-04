@@ -17,3 +17,7 @@ export const playAgainBtn = document.getElementById("playAgainBtn");
 
 export const infoModal = document.getElementById("infoModal");
 export const closeInfoBtn = document.getElementById("closeInfoBtn");
+
+export const mirrorAngleHud = document.getElementById("mirrorAngleHud");
+export const mirrorAngleDial = document.getElementById("mirrorAngleDial");
+export const mirrorAngleValue = document.getElementById("mirrorAngleValue");

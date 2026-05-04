@@ -4,6 +4,7 @@ import { state } from "./state.js";
 import { canvasPoint, mirrorAtCanvasPoint, pointToGrid } from "./coords.js";
 import { isInsideGrid } from "./grid.js";
 import { draw } from "./render.js";
+import { hideMirrorRotationHud, showMirrorRotationHud } from "./angleHud.js";
 
 export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud }) {
   canvas.addEventListener("pointerdown", (e) => {
@@ -90,6 +91,9 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
       const t2 = e.touches[1];
       state.rotationPrevAngle = Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX);
       state.rotationChanged = false;
+
+      const mirror = state.mirrors.find((m) => m.id === state.rotationMirrorId);
+      if (mirror) showMirrorRotationHud(mirror.angle);
     }
   }
 
@@ -118,9 +122,12 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
       const snapped = (((Math.round(angleDeg / 45) * 45) % 180) + 180) % 180;
 
       const mirror = state.mirrors.find((m) => m.id === state.rotationMirrorId);
-      if (mirror && mirror.angle !== snapped) {
-        mirror.angle = snapped;
-        state.rotationChanged = true;
+      if (mirror) {
+        if (mirror.angle !== snapped) {
+          mirror.angle = snapped;
+          state.rotationChanged = true;
+        }
+        showMirrorRotationHud(mirror.angle);
         draw();
       }
 
@@ -147,6 +154,7 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
       state.rotationStartAngle = null;
       state.rotationChanged = false;
       state.rotationPrevAngle = null;
+      hideMirrorRotationHud();
     }
 
     if (remaining === 1) {
@@ -162,6 +170,7 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
       state.rotationPrevAngle = null;
       state.draggingMirrorId = null;
       state.dragStartGrid = null;
+      hideMirrorRotationHud();
       draw();
     }
   }

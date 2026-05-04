@@ -22,7 +22,8 @@ DATEIEN
   js/coords.js – Canvas- zu Gitterkoordinaten
   js/laser.js  – Lichtstrahl-Berechnung (Reflexion)
   js/render.js – Canvas-Zeichnen
-  js/input.js  – Maus/Stift/Touch (Drag, Rotation, Doppeltipp)
+  js/input.js  – Touch (Drag, Rotation, Doppeltipp)
+  js/angleHud.js – Live-Winkelanzeige beim Zwei-Finger-Drehen
   js/utils.js  – Hilfsfunktionen (z. B. deepClone)
 
 

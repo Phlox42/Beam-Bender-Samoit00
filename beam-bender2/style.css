@@ -125,6 +125,94 @@ body {
   white-space: nowrap;
 }
 
+/* Rotation live (Zwei-Finger) – Winkel + kleiner Zeiger (fixed = kein Reflow / Canvas bleibt gleich groß) */
+.mirror-angle-hud {
+  position: fixed;
+  top: max(8px, calc(env(safe-area-inset-top) + 6px));
+  right: max(8px, calc(env(safe-area-inset-right) + 8px));
+  z-index: 15;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 12px 5px 8px;
+  background: linear-gradient(155deg, #16192c, #0e101c);
+  border: 1px solid rgba(0, 212, 255, 0.38);
+  border-radius: 12px;
+  box-shadow:
+    0 0 22px rgba(0, 212, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.mirror-angle-hud.hidden {
+  display: none !important;
+}
+
+.mirror-angle-dial {
+  --mirror-angle: 0deg;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #34395c;
+  background: radial-gradient(circle at 50% 50%, #0a0c16 0%, #0a0c16 55%, #13162a 56%, #13162a 100%);
+  flex-shrink: 0;
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.45);
+}
+
+.mirror-angle-dial::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 5px;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: #5a6288;
+  opacity: 0.85;
+}
+
+.mirror-angle-dial::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  width: 3px;
+  height: 38%;
+  margin-left: -1.5px;
+  background: linear-gradient(to top, #00b8e6, #e8fbff);
+  transform-origin: 50% 100%;
+  transform: rotate(var(--mirror-angle));
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+.mirror-angle-readout {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.05;
+  min-width: 3.2ch;
+}
+
+.mirror-angle-readout-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #8899cc !important;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.mirror-angle-readout-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1rem, 4.2vw, 1.38rem);
+  font-weight: 800;
+  color: #00d4ff !important;
+  text-shadow: 0 0 14px rgba(0, 212, 255, 0.35);
+}
+
 /* ── Canvas ──────────────────────────────── */
 canvas {
   /* Fill as much space as possible (rectangular field) */
@@ -204,6 +292,11 @@ button:active { background: #0e1020; }
   .hud-right span {
     flex: 1 1 100%;
     text-align: center;
+  }
+
+  .mirror-angle-hud span {
+    flex: 0 0 auto;
+    text-align: left;
   }
 
   canvas { min-height: 0; }
