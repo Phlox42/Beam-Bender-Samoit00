@@ -13,7 +13,17 @@ DATEIEN
 -------
   index.html   – Hauptseite (Canvas, HUD, Overlays)
   style.css    – Styling (Dark-Sci-Fi-Ästhetik, Google Fonts)
-  game.js      – Gesamte Spiellogik + Rendering + Touch-Events
+  js/main.js   – Einstieg: Level laden, Laser, HUD, UI-Events
+  js/state.js  – Gemeinsamer Spielzustand
+  js/dom.js    – DOM-Referenzen (Canvas, Buttons, Overlays)
+  js/constants.js – Rastergröße, Konstanten
+  js/levels.js – Level-Definitionen
+  js/grid.js   – Raster, Spiegelplatzierung, statische Karte
+  js/coords.js – Canvas- zu Gitterkoordinaten
+  js/laser.js  – Lichtstrahl-Berechnung (Reflexion)
+  js/render.js – Canvas-Zeichnen
+  js/input.js  – Maus/Stift/Touch (Drag, Rotation, Doppeltipp)
+  js/utils.js  – Hilfsfunktionen (z. B. deepClone)
 
 
 INSTALLATION & START (Desktop)
