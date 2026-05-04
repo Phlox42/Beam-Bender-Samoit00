@@ -20,6 +20,7 @@ DATEIEN
   js/levels.js – Level-Definitionen
   js/grid.js   – Raster, Spiegelplatzierung, statische Karte
   js/coords.js – Canvas- zu Gitterkoordinaten
+  js/angles.js – Anzeige: Linienwinkel zu x (0° = waagrecht)
   js/laser.js  – Lichtstrahl-Berechnung (Reflexion)
   js/render.js – Canvas-Zeichnen
   js/input.js  – Touch (Drag, Rotation, Doppeltipp)

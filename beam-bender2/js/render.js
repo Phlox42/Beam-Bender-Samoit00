@@ -1,6 +1,7 @@
 import { GRID_COLS, GRID_ROWS } from "./constants.js";
 import { canvas, ctx } from "./dom.js";
 import { state } from "./state.js";
+import { mirrorLineAngleFromSpriteRotation } from "./angles.js";
 
 function tileUnit() {
   return state.tileSize;
@@ -126,7 +127,7 @@ function drawMirrors() {
     ctx.font = `${Math.max(9, Math.floor(u * 0.12))}px monospace`;
     ctx.textAlign = "right";
     ctx.textBaseline = "bottom";
-    ctx.fillText(`${angle}°`, (x + 1) * state.tileSize - 8, (y + 1) * state.tileSize - 6);
+    ctx.fillText(`${mirrorLineAngleFromSpriteRotation(angle)}°`, (x + 1) * state.tileSize - 8, (y + 1) * state.tileSize - 6);
   });
 }
 

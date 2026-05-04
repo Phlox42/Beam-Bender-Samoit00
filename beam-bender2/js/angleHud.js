@@ -1,14 +1,17 @@
 import { mirrorAngleHud, mirrorAngleDial, mirrorAngleValue } from "./dom.js";
+import { mirrorLineAngleFromSpriteRotation } from "./angles.js";
 
-export function updateMirrorRotationHud(angleDeg) {
-  mirrorAngleValue.textContent = `${angleDeg}°`;
-  mirrorAngleDial.style.setProperty("--mirror-angle", `${angleDeg}deg`);
+/** spriteAngleDeg = interner Sprite-Winkel (wie in state) */
+export function updateMirrorRotationHud(spriteAngleDeg) {
+  const lineDeg = mirrorLineAngleFromSpriteRotation(spriteAngleDeg);
+  mirrorAngleValue.textContent = `${lineDeg}°`;
+  mirrorAngleDial.style.setProperty("--mirror-angle", `${lineDeg}deg`);
 }
 
-export function showMirrorRotationHud(angleDeg) {
+export function showMirrorRotationHud(spriteAngleDeg) {
   mirrorAngleHud.classList.remove("hidden");
   mirrorAngleHud.setAttribute("aria-hidden", "false");
-  updateMirrorRotationHud(angleDeg);
+  updateMirrorRotationHud(spriteAngleDeg);
 }
 
 export function hideMirrorRotationHud() {
