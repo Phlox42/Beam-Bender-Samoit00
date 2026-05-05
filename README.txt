@@ -29,7 +29,7 @@ DATEIEN
   js/utils.js  – Hilfsfunktionen (z. B. deepClone)
 
 
-INSTALLATION & START (Desktop)
+INSTALLATION & START 
 -------------------------------
 1. Ordner mit VS Code öffnen
 2. Live Server starten (Port 5500 oder 3000)
@@ -68,7 +68,7 @@ TOUCH-GESTEN IM SPIEL
       • touchend:   Spiegel einrasten (bei besetztem Feld: zurück)
 
   02  Spiegel rotieren     →  2 Finger, Rotation
-      • touchstart: 2 Finger auf/neben Spiegel setzen
+      • touchstart: 2 Finger (einen auf den Spiegel und einen irgendwo auf dem bildschrirm) setzen
       • touchmove:  Drehgeste → Einrasten in 45°-Schritten
       • touchend:   Winkel wird übernommen (+1 Zug)
 
@@ -78,11 +78,6 @@ TOUCH-GESTEN IM SPIEL
       • Trifft Ziel → nächstes Level
       • Verfehlt Ziel → Laser erlischt, weiter spielen
       • Laser testen zählt NICHT als Zug!
-
-Desktop-Alternativen:
-  • Drag & Drop mit Maus
-  • Rechtsklick auf Spiegel → 45°-Rotation
-  • Button "⚡ Laser testen"
 
 
 SPIELREGELN
