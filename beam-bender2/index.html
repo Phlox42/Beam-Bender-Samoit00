@@ -30,7 +30,6 @@
           <li>☝️ <strong>1 Finger ziehen</strong> – Spiegel verschieben</li>
           <li>☝️+✌️ <strong>2. Finger irgendwo</strong> – Spiegel rotieren (45°-Schritte)</li>
           <li>👆👆 <strong>Double Tap</strong> – Laser abfeuern</li>
-          <li>🖱️ <strong>Rechtsklick</strong> – Spiegel rotieren (Desktop)</li>
         </ul>
         <p class="info-note">Laser testen zählt nicht als Zug.</p>
         <button id="closeInfoBtn" type="button">Schließen</button>
@@ -58,7 +57,7 @@
         </div>
       </header>
 
-      <!-- Overlay: nimmt keinen Platz im Layout ein (kein Verkleinern des Canvas) -->
+      <!--Rotations-Overlay-->
       <div id="mirrorAngleHud" class="mirror-angle-hud hidden" aria-live="polite" aria-atomic="true" aria-hidden="true">
         <div id="mirrorAngleDial" class="mirror-angle-dial" aria-hidden="true"></div>
         <div class="mirror-angle-readout">
@@ -67,6 +66,7 @@
         </div>
       </div>
 
+      <!--Spielfeld-->
       <canvas id="gameCanvas" width="640" height="640" aria-label="Beam Bender Spielfeld"></canvas>
 
       <p id="statusText"></p>

@@ -23,6 +23,8 @@ import { draw } from "./render.js";
 import { registerCanvasInput } from "./input.js";
 import { hideMirrorRotationHud } from "./angleHud.js";
 
+//--- beim Start ---
+//berechnet tileSize und setzt Canvas-Größe passend zum Bildschirm
 function updateCanvasMetrics() {
   const rect = canvas.getBoundingClientRect();
   const tileByWidth = rect.width / GRID_COLS;
@@ -31,15 +33,19 @@ function updateCanvasMetrics() {
   canvas.height = state.tileSize * GRID_ROWS;
 }
 
+//--- Levelverwaltung ---
+//aktualisiert Level-Anzeige und Züge-Zähler
 function updateHud() {
   levelLabel.textContent = `Level ${state.currentLevelIndex + 1} / ${levels.length}`;
   movesLabel.textContent = `Züge: ${state.moveCount}`;
 }
 
+// setzt den Statustext unten
 function setStatus(text) {
   statusText.textContent = text;
 }
 
+//Klont ein Level aus levels.js in den State, setzt Zähler zurück, ruft draw() auf
 function loadLevel(index) {
   state.currentLevelIndex = index;
   state.currentLevel = deepClone(levels[index]);
@@ -54,6 +60,8 @@ function loadLevel(index) {
   draw();
 }
 
+//--- Spiellogik ---
+//Prüft ob ein gezogener Spiegel gültig platziert wurde oder zurückspringt
 function commitDrag() {
   if (state.draggingMirrorId === null) return;
   const mirror = state.mirrors.find((m) => m.id === state.draggingMirrorId);
@@ -74,6 +82,7 @@ function commitDrag() {
   draw();
 }
 
+//startet die Laser-Berechnung und Animation
 function runLaser() {
   if (!state.gameStarted || state.laserAnimating) return;
   const result = traceLaserPath();
@@ -83,6 +92,7 @@ function runLaser() {
   animateLaser(result.hitTarget);
 }
 
+//animiert den Laser-Pfad und zeigt den Erfolg oder Misserfolg an
 function animateLaser(hitTarget) {
   const duration = Math.max(400, state.laserPath.length * 100);
   const startTime = performance.now();
@@ -116,37 +126,46 @@ function animateLaser(hitTarget) {
   requestAnimationFrame(frame);
 }
 
+//--- Event-Handler ---
+//Registriert die Event-Handler für den Canvas-Input
 registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud });
 
+//Ruft runLaser() auf, gleich wie Double Tap
 testLaserBtn.addEventListener("click", runLaser);
 
+//Lädt das aktuelle Level neu, setzt den Statustext
 resetBtn.addEventListener("click", () => {
   if (!state.gameStarted) return;
   loadLevel(state.currentLevelIndex);
   setStatus("Level zurückgesetzt.");
 });
 
+//Öffnet und schließt das Info-Popup
 infoBtn.addEventListener("click", () => infoModal.classList.remove("hidden"));
 closeInfoBtn.addEventListener("click", () => infoModal.classList.add("hidden"));
 infoModal.addEventListener("click", (e) => {
   if (e.target === infoModal) infoModal.classList.add("hidden");
 });
 
+//Startet das Spiel, versteckt den Startscreen
 startGameBtn.addEventListener("click", () => {
   state.gameStarted = true;
   startScreen.classList.add("hidden");
   loadLevel(0);
 });
 
+//Startet das Spiel neu, versteckt den Winscreen
 playAgainBtn.addEventListener("click", () => {
   state.gameStarted = true;
   winModal.classList.add("hidden");
   loadLevel(0);
 });
 
+//Aktualisiert die Canvas-Größe bei Fenstergrößenänderung
 window.addEventListener("resize", () => {
   updateCanvasMetrics();
   draw();
 });
 
+//Initialisiert die Canvas-Größe
 updateCanvasMetrics();

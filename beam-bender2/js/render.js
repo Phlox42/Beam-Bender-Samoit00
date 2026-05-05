@@ -1,3 +1,7 @@
+/*
+Zeichnet auf dem Canvas
+*/
+
 import { GRID_COLS, GRID_ROWS } from "./constants.js";
 import { canvas, ctx } from "./dom.js";
 import { state } from "./state.js";
@@ -7,10 +11,12 @@ function tileUnit() {
   return state.tileSize;
 }
 
+//Berechnet den Mittelpunkt einer Rasterzelle in Canvas-Pixeln
 function cellCenter(x, y) {
   return { cx: (x + 0.5) * state.tileSize, cy: (y + 0.5) * state.tileSize };
 }
 
+//Rasterlinien 
 function drawGrid() {
   ctx.strokeStyle = "#1a1c2e";
   ctx.lineWidth = 1;
@@ -30,6 +36,7 @@ function drawGrid() {
   }
 }
 
+//Lichtquelle als leuchtenden Farbverlauf mit einem Richtungspfeil 
 function drawSource() {
   const u = tileUnit();
   const { x, y } = state.currentLevel.source;
@@ -51,6 +58,7 @@ function drawSource() {
   ctx.fillText({ right: "▶", left: "◀", up: "▲", down: "▼" }[state.currentLevel.source.dir] || "▶", cx, cy);
 }
 
+//zeichnet das Ziel als Zielscheibe in lila
 function drawTarget() {
   const u = tileUnit();
   const { x, y } = state.currentLevel.target;
@@ -70,6 +78,7 @@ function drawTarget() {
   ctx.fill();
 }
 
+//Hindernisse mit rotem Schraffur-Muster und Rahmen
 function drawObstacles() {
   const u = tileUnit();
   state.currentLevel.obstacles.forEach(({ x, y }) => {
@@ -94,6 +103,7 @@ function drawObstacles() {
   });
 }
 
+//Spiegel als Kästchen mit diagonaler Linie
 function drawMirrors() {
   const u = tileUnit();
   state.mirrors.forEach((mirror) => {
@@ -101,6 +111,7 @@ function drawMirrors() {
     const { cx, cy } = cellCenter(x, y);
     const isActive = mirror.id === state.draggingMirrorId || mirror.id === state.rotationMirrorId;
 
+    //Aktive Spiegel (gerade gezogen oder rotiert) leuchten heller
     ctx.fillStyle = isActive ? "#1e2545" : "#141726";
     ctx.fillRect(x * state.tileSize + 6, y * state.tileSize + 6, state.tileSize - 12, state.tileSize - 12);
     ctx.strokeStyle = isActive ? "#00d4ff" : "#2e3254";
@@ -131,6 +142,7 @@ function drawMirrors() {
   });
 }
 
+//zeichnet den Laserstrahl Segment für Segment, basierend auf laserAnimationProgress
 function drawLaser() {
   const u = tileUnit();
   if (state.laserPath.length === 0) return;
@@ -151,6 +163,7 @@ function drawLaser() {
   ctx.restore();
 }
 
+//Wird von main.js und input.js aufgerufen wenn sich etwas ändert
 export function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (!state.currentLevel) return;

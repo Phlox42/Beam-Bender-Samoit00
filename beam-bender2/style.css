@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Share+Tech+Mono&display=swap');
+/*Orbitron und Share Tech Mono als Schriftarten*/
 
 * { box-sizing: border-box; }
 
@@ -125,7 +126,7 @@ body {
   white-space: nowrap;
 }
 
-/* Rotation live (Zwei-Finger) – Winkel + kleiner Zeiger (fixed = kein Reflow / Canvas bleibt gleich groß) */
+/* Rotation live (Zwei-Finger) */
 .mirror-angle-hud {
   position: fixed;
   top: max(8px, calc(env(safe-area-inset-top) + 6px));
@@ -160,7 +161,7 @@ body {
   box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.45);
 }
 
-/* Bezug 0° = waagrecht (rechts); Zeiger dreht im Uhrzeigersinn wie der Linienwinkel */
+/* Zeiger dreht im Uhrzeigersinn wie der Linienwinkel */
 .mirror-angle-dial::before {
   content: "";
   position: absolute;
@@ -217,7 +218,6 @@ body {
 
 /* ── Canvas ──────────────────────────────── */
 canvas {
-  /* Fill as much space as possible (rectangular field) */
   width: 100%;
   height: auto;
   max-height: none;
@@ -270,6 +270,7 @@ button:active { background: #0e1020; }
   box-shadow: 0 0 10px rgba(255, 68, 50, 0.2);
 }
 
+/* Auf kleinen Bildschirmen wird der HUD zweizeilig gestapelt */
 @media (max-width: 520px) {
   .app {
     gap: 8px;

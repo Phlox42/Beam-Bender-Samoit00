@@ -1,3 +1,13 @@
+/*
+Definiert für jedes Level den Startzustand 
+aller fixen und beweglichen Objekte
+
+source = Lichtquelle
+target = Ziel
+obstacles = Hindernisse
+mirrors = Spiegel
+*/
+
 export const levels = [
   {
     source: { x: 0, y: 5, dir: "right" },

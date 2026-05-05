@@ -1,3 +1,7 @@
+/*
+Verarbeitet Eingaben vom Spieler
+*/
+
 import { DOUBLE_TAP_MS } from "./constants.js";
 import { canvas } from "./dom.js";
 import { state } from "./state.js";
@@ -6,6 +10,7 @@ import { isInsideGrid } from "./grid.js";
 import { draw } from "./render.js";
 import { hideMirrorRotationHud, showMirrorRotationHud } from "./angleHud.js";
 
+//Bekommt vier Funktionen aus der Main
 export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud }) {
   canvas.addEventListener("pointerdown", (e) => {
     if (!state.gameStarted) return;
@@ -19,6 +24,7 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
     }
   });
 
+  //Rechnet Client-Koordinaten → Canvas → Grid um und setzt die neue Mirror-Position
   canvas.addEventListener("pointermove", (e) => {
     if (!state.gameStarted || state.draggingMirrorId === null) return;
     const p = canvasPoint(e.clientX, e.clientY);
@@ -31,9 +37,11 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
     }
   });
 
+  //prüft ob die neue Position gültig ist.
   canvas.addEventListener("pointerup", commitDrag);
   canvas.addEventListener("pointercancel", commitDrag);
 
+  //Verhindert das Browser-Kontextmenü. Dann Spiegel um 45° drehen, Zug zählen.
   canvas.addEventListener("contextmenu", (e) => {
     if (!state.gameStarted) return;
     e.preventDefault();
@@ -48,6 +56,7 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
     }
   });
 
+  //---Touch-Events---
   canvas.addEventListener("touchstart", onTouchStart, { passive: false });
   canvas.addEventListener("touchmove", onTouchMove, { passive: false });
   canvas.addEventListener("touchend", onTouchEnd, { passive: false });
@@ -58,7 +67,7 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
     if (!state.gameStarted) return;
 
     const touchCount = e.touches.length;
-
+    //1. Finger
     if (touchCount === 1) {
       const now = performance.now();
 
@@ -83,6 +92,7 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
       }
     }
 
+    //2. Finger
     if (touchCount === 2 && state.rotationMirrorId !== null) {
       state.draggingMirrorId = null;
       state.dragStartGrid = null;
@@ -97,6 +107,7 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
     }
   }
 
+  //1 Finger: Spiegel verschieben
   function onTouchMove(e) {
     e.preventDefault();
     if (!state.gameStarted) return;
@@ -113,12 +124,15 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
       }
     }
 
+    //2 Finger: 
+    //Berechnet den Winkel der Linie zwischen den zwei Fingern in Grad.
     if (e.touches.length === 2 && state.rotationMirrorId !== null) {
       const t1 = e.touches[0];
       const t2 = e.touches[1];
       const currentAngle = Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX);
 
       const angleDeg = (currentAngle * 180) / Math.PI;
+      //Rastet auf den nächsten 45°-Schritt ein und sieht nach 180° gleich aus
       const snapped = (((Math.round(angleDeg / 45) * 45) % 180) + 180) % 180;
 
       const mirror = state.mirrors.find((m) => m.id === state.rotationMirrorId);
@@ -135,12 +149,13 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
     }
   }
 
+  //
   function onTouchEnd(e) {
     e.preventDefault();
     if (!state.gameStarted) return;
 
     const remaining = e.touches.length;
-
+    //alle finger weg
     if (remaining === 0) {
       if (state.draggingMirrorId !== null) commitDrag();
 
@@ -157,6 +172,8 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
       hideMirrorRotationHud();
     }
 
+    //2. Finger losgelassen, 1. noch da
+    //Rotation beenden, Zug zählen, Drag-State zurücksetzen, HUD verstecken, neu zeichnen
     if (remaining === 1) {
       if (state.rotationChanged) {
         state.moveCount++;

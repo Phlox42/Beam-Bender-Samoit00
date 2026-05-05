@@ -1,11 +1,12 @@
 ================================================================
   BEAM BENDER – MCI2 Lab · Touch-Puzzle-Spiel
+  Autor:       Sascha Morbitzer (samoit00)
 ================================================================
 
 BESCHREIBUNG
 ------------
 Beam Bender ist ein gridbasiertes Lichtstrahl-Puzzle für
-Touchscreens (und Desktop). Der Spieler positioniert und
+Touchscreens. Der Spieler positioniert und
 rotiert Spiegel, um einen Laserstrahl von der Lichtquelle
 zum Ziel zu lenken – dabei sind fixe Hindernisse zu umgehen.
 
@@ -40,26 +41,22 @@ TOUCH-DEBUGGING MIT SCRCPY
 Voraussetzung: Android SDK (adb) installiert, Gerät per USB,
                USB-Debugging im Entwicklermenü aktiviert
 
-1. Im Beam-Bender-Ordner:
+1. Im Scrcpy-Ordner:
      scrcpy_open_a_terminal_here.bat   (oder normales Terminal)
 
 2. Gerät prüfen:
      adb devices
      → Gerät muss als "device" erscheinen (nicht "unauthorized")
 
-3. Port weiterleiten (Live Server auf Port 5500):
+3. Port weiterleiten (je nach dem welcher Port von Live Server verwendet wird):
      adb reverse tcp:5500 tcp:5500
    oder für Port 3000:
      adb reverse tcp:3000 tcp:3000
 
-4. scrcpy starten (Handy-Screen auf PC spiegeln):
-     scrcpy
-
-5. Auf dem Handy im Browser:
+4. Auf dem Handy im Browser:
      http://localhost:5500
-   (oder http://localhost:3000 je nach Live-Server-Port)
-
-6. Touch-Interaktionen testen – Touches erscheinen live
+  
+5. Touch-Interaktionen testen – Touches erscheinen live
    auf dem gespiegelten Bildschirm.
 
 
