@@ -1,5 +1,6 @@
 /*
 Verwaltet die Grid-Logik
+Grenzen prüfen, Felder belegt?, Spiegel finden
 */
 
 import { GRID_COLS, GRID_ROWS } from "./constants.js";

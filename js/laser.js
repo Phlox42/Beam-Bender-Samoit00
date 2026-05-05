@@ -1,5 +1,6 @@
 /*
 Laser-Berechnung (ohne Aimation)
+Richtung, Reflexion, Treffer
 */
 
 import { state } from "./state.js";

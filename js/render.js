@@ -1,5 +1,5 @@
 /*
-Zeichnet auf dem Canvas
+Zeichnet auf dem Canvas: Grid, Spiegel, Laser, Quelle, Ziel
 */
 
 import { GRID_COLS, GRID_ROWS } from "./constants.js";

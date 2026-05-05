@@ -67,7 +67,7 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
     if (!state.gameStarted) return;
 
     const touchCount = e.touches.length;
-    //1. Finger
+    //1. Finger Double Tap
     if (touchCount === 1) {
       const now = performance.now();
 
@@ -92,7 +92,8 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
       }
     }
 
-    //2. Finger
+    //2. Finger Rotation
+    //Nur ausgeführt wenn bereits ein Spiegel mit dem 1. Finger gehalten wird
     if (touchCount === 2 && state.rotationMirrorId !== null) {
       state.draggingMirrorId = null;
       state.dragStartGrid = null;
@@ -124,7 +125,7 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
       }
     }
 
-    //2 Finger: 
+    //2 Finger: Währen der bewegung
     //Berechnet den Winkel der Linie zwischen den zwei Fingern in Grad.
     if (e.touches.length === 2 && state.rotationMirrorId !== null) {
       const t1 = e.touches[0];
@@ -149,7 +150,8 @@ export function registerCanvasInput({ commitDrag, runLaser, setStatus, updateHud
     }
   }
 
-  //
+  //Alle Finger loslassen
+  //Drag committen, Rotation als Zug zählen, Alles zurücksetzen
   function onTouchEnd(e) {
     e.preventDefault();
     if (!state.gameStarted) return;
