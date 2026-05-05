@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Share+Tech+Mono&display=swap');
+/*Orbitron und Share Tech Mono als Schriftarten*/
 
 * { box-sizing: border-box; }
 
@@ -83,13 +84,13 @@ body {
 /* ── App layout ──────────────────────────── */
 .app {
   width: 100%;
-  max-width: 640px;
+  max-width: none;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 6px 8px 4px;
+  padding: max(6px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
   gap: 6px;
-  height: 100vh;
+  height: 100dvh;
 }
 
 /* ── HUD ─────────────────────────────────── */
@@ -114,7 +115,8 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .hud-right span {
@@ -124,18 +126,107 @@ body {
   white-space: nowrap;
 }
 
+/* Rotation live (Zwei-Finger) */
+.mirror-angle-hud {
+  position: fixed;
+  top: max(8px, calc(env(safe-area-inset-top) + 6px));
+  right: max(8px, calc(env(safe-area-inset-right) + 8px));
+  z-index: 15;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 12px 5px 8px;
+  background: linear-gradient(155deg, #16192c, #0e101c);
+  border: 1px solid rgba(0, 212, 255, 0.38);
+  border-radius: 12px;
+  box-shadow:
+    0 0 22px rgba(0, 212, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.mirror-angle-hud.hidden {
+  display: none !important;
+}
+
+.mirror-angle-dial {
+  --mirror-angle: 0deg;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #34395c;
+  background: radial-gradient(circle at 50% 50%, #0a0c16 0%, #0a0c16 55%, #13162a 56%, #13162a 100%);
+  flex-shrink: 0;
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.45);
+}
+
+/* Zeiger dreht im Uhrzeigersinn wie der Linienwinkel */
+.mirror-angle-dial::before {
+  content: "";
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 50%;
+  background: #5a6288;
+  opacity: 0.85;
+}
+
+.mirror-angle-dial::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 42%;
+  height: 3px;
+  margin-top: -1.5px;
+  margin-left: 0;
+  background: linear-gradient(to right, #00b8e6, #e8fbff);
+  transform-origin: 0 50%;
+  transform: rotate(var(--mirror-angle));
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+.mirror-angle-readout {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.05;
+  min-width: 3.2ch;
+}
+
+.mirror-angle-readout-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #8899cc !important;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.mirror-angle-readout-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1rem, 4.2vw, 1.38rem);
+  font-weight: 800;
+  color: #00d4ff !important;
+  text-shadow: 0 0 14px rgba(0, 212, 255, 0.35);
+}
+
 /* ── Canvas ──────────────────────────────── */
 canvas {
-  /* Fill as much space as possible, stay square */
   width: 100%;
-  aspect-ratio: 1 / 1;
-  max-height: calc(100vh - 80px); /* leave room for HUD + status */
+  height: auto;
+  max-height: none;
   object-fit: contain;
   background: #0c0d14;
   border: 1.5px solid #1e2138;
   border-radius: 10px;
   touch-action: none;
-  flex-shrink: 1;
+  flex: 1 1 auto;
   min-height: 0;
 }
 
@@ -155,13 +246,15 @@ button {
   background: #14172a;
   color: #e0e4ff;
   padding: 7px 11px;
+  min-height: 42px;
+  min-width: 42px;
   border-radius: 8px;
   cursor: pointer;
   font-family: 'Share Tech Mono', monospace;
   font-size: clamp(0.75rem, 3vw, 0.9rem);
   transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
   white-space: nowrap;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 button:hover  { background: #1e2340; border-color: #00d4ff66; }
@@ -175,4 +268,39 @@ button:active { background: #0e1020; }
   background: #1f100e;
   border-color: #ff4432;
   box-shadow: 0 0 10px rgba(255, 68, 50, 0.2);
+}
+
+/* Auf kleinen Bildschirmen wird der HUD zweizeilig gestapelt */
+@media (max-width: 520px) {
+  .app {
+    gap: 8px;
+  }
+
+  .hud {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .hud h1 {
+    text-align: center;
+  }
+
+  .hud-right {
+    justify-content: center;
+    row-gap: 8px;
+    column-gap: 8px;
+  }
+
+  .hud-right span {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+
+  .mirror-angle-hud span {
+    flex: 0 0 auto;
+    text-align: left;
+  }
+
+  canvas { min-height: 0; }
 }

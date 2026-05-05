@@ -15,7 +15,7 @@
         <p class="overlay-subtitle">Lichtstrahl-Puzzle</p>
         <ul class="instructions">
           <li>☝️ <strong>1 Finger ziehen</strong> – Spiegel verschieben</li>
-          <li>☝️+✌️ <strong>2. Finger irgendwo</strong> – Spiegel rotieren</li>
+          <li>☝️+✌️ <strong>2. Finger (eine auf den Spiegel, einen daneben)</strong> – Spiegel rotieren</li>
           <li>👆👆 <strong>Double Tap</strong> – Laser abfeuern</li>
         </ul>
         <button id="startGameBtn" type="button">Spiel starten</button>
@@ -30,7 +30,6 @@
           <li>☝️ <strong>1 Finger ziehen</strong> – Spiegel verschieben</li>
           <li>☝️+✌️ <strong>2. Finger irgendwo</strong> – Spiegel rotieren (45°-Schritte)</li>
           <li>👆👆 <strong>Double Tap</strong> – Laser abfeuern</li>
-          <li>🖱️ <strong>Rechtsklick</strong> – Spiegel rotieren (Desktop)</li>
         </ul>
         <p class="info-note">Laser testen zählt nicht als Zug.</p>
         <button id="closeInfoBtn" type="button">Schließen</button>
@@ -58,11 +57,21 @@
         </div>
       </header>
 
+      <!--Rotations-Overlay-->
+      <div id="mirrorAngleHud" class="mirror-angle-hud hidden" aria-live="polite" aria-atomic="true" aria-hidden="true">
+        <div id="mirrorAngleDial" class="mirror-angle-dial" aria-hidden="true"></div>
+        <div class="mirror-angle-readout">
+          <span class="mirror-angle-readout-label">Winkel zu x</span>
+          <span id="mirrorAngleValue" class="mirror-angle-readout-value">0°</span>
+        </div>
+      </div>
+
+      <!--Spielfeld-->
       <canvas id="gameCanvas" width="640" height="640" aria-label="Beam Bender Spielfeld"></canvas>
 
       <p id="statusText"></p>
     </main>
 
-    <script src="game.js"></script>
+    <script type="module" src="js/main.js"></script>
   </body>
 </html>
